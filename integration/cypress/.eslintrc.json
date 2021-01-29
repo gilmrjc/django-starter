@@ -1,0 +1,15 @@
+{
+  "plugins": [
+    "cypress"
+  ],
+  "env": {
+    "cypress/globals": true
+  },
+  "extends": [
+    "plugin:cypress/recommended"
+  ],
+  "rules": {
+    "import/no-unresolved": "off",
+    "import/no-extraneous-dependencies": "off"
+  }
+}

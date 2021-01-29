@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  cypress:
+    build:
+      dockerfile: integration/Dockerfile
+      context: .
+    networks:
+      - testing
+    depends_on:
+      - web
+    environment:
+      - CYPRESS_baseUrl=http://web:8000
+      - CYPRESS_mailHogUrl=http://mailhog:8025
+    volumes:
+      - ./integration/cypress:/usr/src/app/cypress

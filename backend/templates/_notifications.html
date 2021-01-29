@@ -1,0 +1,7 @@
+{% if messages %}
+  {% for message in messages %}
+    <div class="border-t-2 border-green-500 bg-green-300 p-4 js-notification">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}

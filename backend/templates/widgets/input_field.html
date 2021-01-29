@@ -1,0 +1,15 @@
+{% load widget_tweaks %}
+
+<label class="block">
+  <span for="{{ field.id_for_label }}">
+    {{ field.label }}
+  </span>
+  {% if field.errors %}
+    <ul class="mt-2 pl-4 list-disc">
+      {% for error in field.errors %}
+        <li><strong>{{ error|escape }}</strong></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% render_field field class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %}
+</label>

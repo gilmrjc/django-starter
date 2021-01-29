@@ -1,0 +1,114 @@
+{% load static %}
+
+<div class="relative bg-white border-b-2 border-gray-300">
+  <div class="container mx-auto px-2 sm:px-4 flex items-center justify-between">
+    <div class="flex-shrink-0">
+      <a class="block" href="{% url 'home' %}">
+        <span class="sr-only">Inicio</span>
+        <img class="p-1 h-8" alt="Logo" src="{% static 'images/logo.svg' %}" />
+      </a>
+    </div>
+    <nav id="site-menu" class="hidden md:block absolute md:static top-full right-0 left-0 md:w-full md:ml-6 md:flex md:justify-between bg-white border-b-2 border-gray-300 md:border-0">
+      <ul class="block md:inline md:space-x-2 border-b-2 border-gray-700 md:border-0">
+        <li class="md:inline-block p-0 md:p-0 border-t border-gray-300 md:border-0 js-menu-item">
+          <a class="block md:inline-block py-2 px-4 md:py-4 border-b-2 border-transparent hover:border-purple-400" href="{% url 'home' %}">Home</a>
+        </li>
+      </ul>
+      <div class="relative block md:flex items-center">
+        {% if user.is_authenticated %}
+          <div class="flex md:flex-row-reverse md:h-8 w-full md:w-auto md:ml-6 p-2 md:p-0 justify-between items-center">
+            <div class="flex items-center">
+              <button class="max-w-xs text-gray-400 hover:text-gray-700 bg-gray-200 rounded-full flex items-center md:ml-2 text-sm hover:ring-2 hover:ring-offset-2 hover:ring-offset-white hover:ring-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-400" id="user-menu-toggle" aria-haspopup="true">
+                <span class="sr-only">Menú del usuario</span>
+                <svg class="w-8 h-8 p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </button>
+              <span class="ml-2 md:hidden text-gray-500 font-semibold">{{ user.email }}</span>
+            </div>
+            <div class="relative hidden">
+              <button class="block rounded-full text-gray-400 hover:text-gray-700 hover:ring-2 hover:ring-offset-2 hover:ring-offset-white hover:ring-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-400">
+                <span class="sr-only">Notificaciones</span>
+                <svg class="h-8 w-8 p-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <svg class="absolute rounded-full top-0 right-0 h-4 w-4 bg-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <circle r="24">
+                </svg>
+              </button>
+              <ul class="md:absolute md:block origin-top-right top-2/3 -right-2 md:w-80 md:max-h-80 overflow-auto md:mt-3 rounded-md bg-white shadow-lg md:ring-1 ring-black ring-opacity-5" id="notifications">
+                <li class="p-4 font-text text-center">
+                  Notificaciones
+                  <span class="inline-block rounded-full h-6 w-6 text-xs leading-loose text-white bg-indigo-700">
+                    9+
+                  </span>
+                </li>
+                <li class="block py-0 md:text-sm text-gray-700 border-t border-gray-300 md:border-0">
+                  <a class="flex items-center p-4 bg-indigo-100 hover:bg-gray-100" href="#">
+                    <svg class="w-8 h-8 rounded-full flex-shrink-0 p-1 text-gray-400 bg-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <div class="ml-4">Notificación sobre alguna actividad importante</div>
+                  </a>
+                </li>
+                <hr />
+                <li class="block py-0 md:text-sm text-gray-700 border-t border-gray-300 md:border-0">
+                  <a class="flex items-center p-4 hover:bg-gray-100" href="#">
+                    <svg class="w-8 h-8 rounded-full flex-shrink-0 p-1 text-gray-400 bg-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <div class="ml-4">Notificación sobre alguna actividad importante</div>
+                  </a>
+                </li>
+                <hr />
+                <li class="block py-0 md:text-sm text-gray-700 border-t border-gray-300 md:border-0">
+                  <a class="flex items-center p-4 hover:bg-gray-100" href="#">
+                    <svg class="w-8 h-8 rounded-full flex-shrink-0 p-1 text-gray-400 bg-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <div class="ml-4">Notificación sobre alguna actividad importante</div>
+                  </a>
+                </li>
+                <hr />
+                <li class="block py-0 md:text-sm text-gray-700 border-t border-gray-300 md:border-0">
+                  <a class="flex items-center p-4 hover:bg-gray-100" href="#">
+                    <svg class="w-8 h-8 rounded-full flex-shrink-0 p-1 text-gray-400 bg-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <div class="ml-4">Notificación sobre alguna actividad importante</div>
+                  </a>
+                </li>
+                <hr />
+                <li class="block py-0 md:text-sm text-gray-700 border-t border-gray-300 md:border-0">
+                  <a class="flex items-center p-4 hover:bg-gray-100" href="#">
+                    <svg class="w-8 h-8 rounded-full flex-shrink-0 p-1 text-gray-400 bg-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <div class="ml-4">Notificación sobre alguna actividad importante</div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <ul class="md:absolute md:hidden origin-top-right top-2/3 -right-2 md:w-48 md:mt-3 md:py-1 rounded-md bg-white shadow-lg md:ring-1 ring-black ring-opacity-5" id="user-menu" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+            <li class="block py-0 md:text-sm text-gray-700 border-t border-gray-300 md:border-0" href="{% url 'account_logout' %}">
+              <a class="block p-2 md:py-2 border-b-2 border-transparent hover:border-purple-400 md:hover:border-transparent md:hover:bg-gray-100" href="{% url 'account_logout' %}">Cerrar sesión</a>
+            </li>
+          </ul>
+        {% else %}
+          <ul class="block md:inline md:space-x-2 border-b-2 border-gray-700 md:border-0">
+            <li class="md:inline-block p-0 md:p-0 border-t border-gray-300 md:border-0">
+              <a class="block md:inline-block py-2 px-4 md:py-4 border-b-2 border-transparent" href="{% url 'account_login' %}">Iniciar sesión</a>
+            </li>
+          </ul>
+        {% endif %}
+      </div>
+    </nav>
+    <button type="button" id="menu-toggle" class="md:hidden py-4">
+      <span class="sr-only">Menú</span>
+      <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+</div>

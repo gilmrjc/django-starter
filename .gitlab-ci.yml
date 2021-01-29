@@ -1,0 +1,181 @@
+stages:
+  - test
+  - deploy
+
+black:
+  image: python:3.8-alpine
+  cache:
+    key:
+      files:
+        - pdm.lock
+    paths:
+      - __pypackages__
+  before_script:
+    - apk add build-base cargo libffi-dev musl-dev libressl-dev python3-dev postgresql-dev jpeg-dev zlib-dev
+    - pip install pdm
+    - pdm sync --dev
+  script:
+    - pdm run lint:black
+  only:
+    - merge_requests
+    - development
+    - master
+
+pylint:
+  image: python:3.8-alpine
+  cache:
+    key:
+      files:
+        - pdm.lock
+    paths:
+      - __pypackages__
+  before_script:
+    - apk add build-base libffi-dev musl-dev libressl-dev python3-dev postgresql-dev jpeg-dev zlib-dev
+    - pip install pdm
+    - pdm sync --dev
+  script:
+    - pdm run lint:pylint
+  only:
+    - merge_requests
+    - development
+    - master
+
+flake8:
+  image: python:3.8-alpine
+  cache:
+    key:
+      files:
+        - pdm.lock
+    paths:
+      - __pypackages__
+  before_script:
+    - apk add build-base libffi-dev musl-dev libressl-dev python3-dev postgresql-dev jpeg-dev zlib-dev
+    - pip install pdm
+    - pdm sync --dev
+  script:
+    - pdm run lint:flake8
+  only:
+    - merge_requests
+    - development
+    - master
+
+pytest:
+  image: python:3.8-alpine
+  cache:
+    key:
+      files:
+        - pdm.lock
+    paths:
+      - __pypackages__
+  before_script:
+    - apk add build-base libffi-dev musl-dev libressl-dev python3-dev postgresql-dev jpeg-dev zlib-dev
+    - pip install pdm
+    - pdm sync --dev
+  script:
+    - pdm run test
+  only:
+    - merge_requests
+    - development
+    - master
+
+eslint:
+  image: node:12-alpine
+  cache:
+    key:
+      files:
+        - package-lock.json
+        - frontend/package-lock.json
+    paths:
+      - node_modules
+      - frontend/node_modules
+  before_script:
+    - npm install
+    - npm run bootstrap
+  script:
+    - npm run lint
+  only:
+    - merge_requests
+    - development
+    - master
+
+jest:
+  image: node:12-alpine
+  cache:
+    key:
+      files:
+        - package-lock.json
+        - frontend/package-lock.json
+    paths:
+      - node_modules
+      - frontend/node_modules
+  before_script:
+    - npm install
+    - npm run bootstrap
+  script:
+    - npm run test:unit
+  only:
+    - merge_requests
+    - development
+    - master
+
+cypress:
+  image:
+    name: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: "/certs"
+  stage: test
+  before_script:
+    - apk add docker-compose
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker pull ${CI_REGISTRY_IMAGE}/testing_web:master || true
+    - docker tag ${CI_REGISTRY_IMAGE}/testing_web:master testing_web || true
+    - docker pull ${CI_REGISTRY_IMAGE}/testing_web:$CI_COMMIT_REF_NAME || true
+    - docker tag ${CI_REGISTRY_IMAGE}/testing_web:$CI_COMMIT_REF_NAME testing_web || true
+  script:
+    - sh integration-test.sh
+  after_script:
+    - docker tag testing_web ${CI_REGISTRY_IMAGE}/testing_web:$CI_COMMIT_REF_NAME
+    - docker push ${CI_REGISTRY_IMAGE}/testing_web:$CI_COMMIT_REF_NAME
+  artifacts:
+    paths:
+      - integration/cypress/screenshots
+      - integration/cypress/videos
+  only:
+    - merge_requests
+    - development
+    - master
+#
+# deploy:
+#   image: node:alpine
+#   stage: deploy
+#   cache: {}
+#   variables:
+#     CAPROVER_APP: app
+#     CAPROVER_BRANCH: master
+#   before_script:
+#     - apk add git
+#     - git checkout master
+#     - git pull
+#     - npm i -g caprover
+#   script:
+#     - caprover deploy
+#   only:
+#     - master
+#
+# deploy-cluster:
+#   image: node:alpine
+#   stage: deploy
+#   variables:
+#     CAPROVER_APP: app-cluster
+#     CAPROVER_BRANCH: master
+#   before_script:
+#     - apk add git
+#     - git checkout master
+#     - npm i -g caprover
+#   script:
+#     - caprover deploy
+#   only:
+#     - master

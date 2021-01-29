@@ -1,0 +1,32 @@
+## Python ignores
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv
+env/
+venv/
+env.bak/
+venv.bak/
+__pypackages__/
+
+# Django stuff
+backend/static/
+backend/media/
+
+## Javascript ignores
+
+# Dependency directories
+**/node_modules/
+
+# Build files
+backend/assets/
+
+## Misc
+
+.env
+
+# Git repository archive
+.git

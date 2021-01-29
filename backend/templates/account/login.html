@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Iniciar sesión{% endblock title %}
+
+{% block content %}
+  <div class="flex justify-center align-center">
+    <div>
+      <p class="mt-2">
+        Bienvenido de vuelta, ingresa tus datos
+      </p>
+      <form method="post">
+        {% include "_form_errors.html" with form=form %}
+        {% csrf_token %}
+        <div class="mt-4">
+          {% include "widgets/input_field.html" with field=form.login %}
+        </div>
+        <div class="mt-4">
+          {% include "widgets/input_field.html" with field=form.password %}
+        </div>
+        <div class="mt-4">
+          {% include "widgets/checkbox_field.html" with field=form.remember %}
+        </div>
+        <button class="mt-6 button" type="submit">Ingresar</button>
+        <a class="block mt-6 font-semibold underline" href="{% url 'account_reset_password' %}">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

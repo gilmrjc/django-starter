@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build --stream",
+    "start": "lerna run start --stream",
+    "lint": "lerna run lint --stream",
+    "lint:fix": "lerna run lint:fix --stream",
+    "test:unit": "lerna run test:unit --stream",
+    "test:e2e": "lerna run test:e2e --stream",
+    "test:e2e:open": "lerna run test:e2e:open --stream"
+  },
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
+}

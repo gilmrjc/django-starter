@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "E-mail Addresses" %}{% endblock %}
+
+{% block content %}
+  <div class="flex justify-center align-center">
+    <div>
+      <h1 class="text-xl font-bold">{% trans "E-mail Addresses" %}</h1>
+      {% if user.emailaddress_set.all %}
+        <p class="mt-4">
+          {% trans 'The following e-mail addresses are associated with your account:' %}
+        </p>
+        <form action="{% url 'account_email' %}" method="post">
+          {% csrf_token %}
+          <fieldset class="mt-4">
+            {% for emailaddress in user.emailaddress_set.all %}
+              <div class="mt-2">
+                <label for="email_radio_{{forloop.counter}}">
+                  <input
+                    id="email_radio_{{forloop.counter}}"
+                    type="radio"
+                    name="email"
+                    {% if emailaddress.primary or user.emailaddress_set.count == 1 %}
+                      checked="checked"
+                    {%endif %}
+                    value="{{emailaddress.email}}"
+                    />
+                  {{ emailaddress.email }}
+                  {% if emailaddress.primary %}
+                    <span class="p-1 bg-green-500 rounded-lg text-xs inline-block">
+                      {% trans "Primary" %}
+                    </span>
+                  {% endif %}
+                  {% if emailaddress.verified %}
+                    <span class="p-1 bg-green-400 rounded-lg text-xs inline-block">
+                      {% trans "Verified" %}
+                    </span>
+                  {% else %}
+                    <span class="p-1 bg-red-400 rounded-lg text-xs inline-block">
+                      {% trans "Unverified" %}
+                    </span>
+                  {% endif %}
+                </label>
+              </div>
+            {% endfor %}
+            <div class="mt-4">
+              <button class="button " type="submit" name="action_primary">
+                {% trans 'Make Primary' %}
+              </button>
+              <button class="button " type="submit" name="action_send">
+                {% trans 'Re-send Verification' %}
+              </button>
+              <button class="button " type="submit" name="action_remove">
+                {% trans 'Remove' %}
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      {% else %}
+        <p class="mt-4">
+          <strong>{% trans 'Warning:'%}</strong>
+          {% trans "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc." %}
+        </p>
+      {% endif %}
+      {% if can_add_email %}
+        <h2 class="mt-6 font-bold text-xl">{% trans "Add E-mail Address" %}</h2>
+        <form method="post" action="{% url 'account_email' %}">
+          {% csrf_token %}
+          {% for field in form.visible_fields %}
+            <div class="mt-4">
+              {% include "widgets/input_field.html" with field=field %}
+            </div>
+          {% endfor %}
+          <button class="mt-6 button" name="action_add" type="submit">
+            {% trans "Add E-mail" %}
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+  <script type="text/javascript">
+    (function() {
+      var message = "{% trans 'Do you really want to remove the selected e-mail address?' %}";
+      var actions = document.getElementsByName('action_remove');
+      if (actions.length) {
+        actions[0].addEventListener("click", function(e) {
+          if (! confirm(message)) {
+            e.preventDefault();
+          }
+        });
+      }
+    })();
+  </script>
+{% endblock %}

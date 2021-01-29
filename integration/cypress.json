@@ -1,0 +1,6 @@
+{
+  "ignoreTestFiles": "*.js",
+  "testFiles": "**/*.{feature,features}",
+  "baseUrl": "http://localhost:8000",
+  "mailHogUrl": "http://localhost:8025"
+}

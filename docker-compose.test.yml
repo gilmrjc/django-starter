@@ -1,0 +1,70 @@
+version: '3.7'
+
+services:
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    logging:
+      driver: 'none'
+    networks:
+      - testing
+  static:
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx.test.conf:/etc/nginx/nginx.conf
+      - static:/usr/share/nginx/html/static:ro
+      - uploads:/usr/share/nginx/html/media:ro
+    networks:
+      - testing
+    domainname: static.local
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_DB=core
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    networks:
+      - testing
+  web:
+    build:
+      context: .
+      cache_from:
+        - testing_web
+    image: testing_web
+    ports:
+      - 8000:8000
+    command: python manage.py runserver 0.0.0.0:8000 --noreload
+    environment:
+      - SQL_HOST=db
+      - SQL_PORT=5432
+      - DATABASE_URL=postgres://user@db/core
+      - EMAIL_URL=smtp://mailhog:1025
+      - DJANGO_CONFIGURATION=IntegrationTesting
+      - DJANGO_STATIC_URL
+      - DJANGO_MEDIA_URL
+    volumes:
+      - ./pyproject.toml:/usr/src/pyproject.toml
+      - ./pdm.lock:/usr/src/pdm.lock
+      - static:/usr/src/app/backend/static
+      - uploads:/usr/src/app/backend/media
+    links:
+      - db
+      - mailhog
+    networks:
+      - testing
+    depends_on:
+      - db
+      - mailhog
+      - static
+
+volumes:
+  static:
+  uploads:
+
+networks:
+  testing:
+    driver: bridge

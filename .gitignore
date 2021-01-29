@@ -1,0 +1,65 @@
+## Python ignores
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+__pypackages__/
+.pdm.toml
+
+# Django stuff
+backend/static/
+backend/media/
+
+## Javascript ignores
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# e2e testing artifacts
+integration/cypress/screenshots
+integration/cypress/videos
+
+# Build files
+backend/assets/
+
+
+## Misc
+
+.env
+
+# Mac finder
+.DS_Store

@@ -1,0 +1,28 @@
+{% block modal %}
+  <div id="{{ id }}" class="modal" aria-hidden="true">
+    <div class="fixed inset-0 grid place-items-center bg-gray-800 bg-opacity-40" tabindex="-1" data-micromodal-close>
+      <div
+        class="max-w-xl max-h-96 p-6 bg-white rounded-lg overflow-auto"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="{{ id }}-title">
+        <header class="flex align-center justify-between">
+          <h2 id="{{ id }}-title" class="text-xl text-indigo-700 font-semibold js-modal-title">
+            {{ title }}
+          </h2>
+          <button class="font-bold" aria-label="Close modal" data-micromodal-close>
+            ✕
+          </button>
+        </header>
+        <div class="my-8 js-modal-content">
+          {% block content %}
+          {% endblock content %}
+        </div>
+        <footer class="my-4 js-modal-footer">
+          {% block footer %}
+          {% endblock footer %}
+        </footer>
+      </div>
+    </div>
+  </div>
+{% endblock modal %}

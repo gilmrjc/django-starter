@@ -1,0 +1,62 @@
+{% load static i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Inicio {% endblock title %} | Core</title>
+    {% block head_favicon %}
+      {# <link rel="icon" type="image/svg" href="{% static 'images/favicon.svg' %}" /> #}
+    {% endblock head_favicon %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block head_meta %}
+    {% endblock head_meta %}
+    {% block head_css %}
+      {# Improve Google fonts loading <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin> #}
+      <link href="{% static 'css/styles.css' %}" rel="stylesheet" media="screen" />
+      {% block head_css_page %}{% endblock head_css_page %}
+    {% endblock head_css %}
+    {% include '_global_vars.html' %}
+    {% if settings.DEBUG %}
+      <script>HMR_WEBSOCKET_PORT = 12321</script>
+      <script src="{% static '_snowpack/hmr-client.js' %}" type="module"></script>
+    {% endif %}
+    {% block third_party_scripts %}
+    {% endblock third_party_scripts %}
+    {% block global_javascript %}
+      <script type="module">
+        import createMenu from "{% static 'js/utils/menu.js' %}"
+        import createNofitication from "{% static 'js/utils/notifications.js' %}"
+
+        const menu = createMenu('site-menu', 'menu-toggle', 'hidden', 'border-purple-700', 'md:hidden')
+        if (menu) {
+          menu.init()
+        }
+
+        Array.from(document.getElementsByClassName('js-notification'))
+          .map((element) => createNofitication(element))
+          .forEach((notification) => { notification.init() })
+      </script>
+      {% block page_javascript %}{% endblock page_javascript %}
+    {% endblock global_javascript %}
+  </head>
+  <body class="antialiased">
+    {% block header %}
+      <header class="sticky top-0">
+        {% include '_navbar.html' %}
+      </header>
+    {% endblock header %}
+    {% block messages %}
+      {% include '_notifications.html' %}
+    {% endblock messages %}
+    {% block wrapper %}
+      <main class="pt-8 px-2 sm:px-4">
+        {% block content %}
+          if you see this, something is wrong!
+        {% endblock content %}
+      </main>
+    {% endblock wrapper %}
+  </body>
+</html>

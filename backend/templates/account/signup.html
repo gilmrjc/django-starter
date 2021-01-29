@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title%}Crear cuenta{% endblock title %}
+
+{% block content %}
+  <div class="flex justify-center align-center">
+    <div>
+      <p class="mt-2">
+        Crea tu cuenta
+      </p>
+      <form method="post">
+        {% include "_form_errors.html" with form=form %}
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+          <div class="mt-4">
+            {% include "widgets/input_field.html" with field=field %}
+          </div>
+        {% endfor %}
+        <button class="mt-6 button" type="submit">Crear cuenta</button>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

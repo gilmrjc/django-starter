@@ -1,0 +1,82 @@
+version: '3.7'
+
+x-app: &default-app
+  build:
+    context: .
+    args:
+      - INCLUDE_DEV_DEPENDENCIES=1
+  environment:
+    - SQL_HOST=db
+    - SQL_PORT=5432
+    - DATABASE_URL=postgres://user@db/core
+    - CACHE_URL=redis://redis:6379/1
+    - SKIP_SETUP_JOBS=1
+    - DJANGO_CONFIGURATION=Dev
+  links:
+    - db
+    - redis
+  depends_on:
+    - db
+    - redis
+
+services:
+  frontend:
+    image: node:12-alpine
+    command: sh -c 'npm install && npm run bootstrap && npm run start'
+    ports:
+      - 12321:12321
+    working_dir: /usr/src/app
+    volumes:
+      - frontend_node_modules:/usr/src/app/frontend/node_modules
+      - root_node_modules:/usr/src/app/node_modules
+      - ./lerna.json:/usr/src/app/lerna.json
+      - ./package.json:/usr/src/app/package.json
+      - ./package-lock.json:/usr/src/app/package-lock.json
+      - ./frontend:/usr/src/app/frontend
+      - ./backend/assets:/usr/src/app/backend/assets
+  media:
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx.test.conf:/etc/nginx/nginx.conf:ro
+      - uploads:/usr/share/nginx/html/media:ro
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_DB=core
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - db:/var/lib/postgresql/data
+  redis:
+    image: redis:6-alpine
+  jobs:
+    <<: *default-app
+    command: watchmedo auto-restart --directory=./ --pattern="*.py" --recursive -- python manage.py qcluster
+    volumes:
+      - ./backend:/usr/src/app/backend:ro
+      - ./pyproject.toml:/usr/src/app/pyproject.toml:ro
+      - ./pdm.lock:/usr/src/app/pdm.lock:ro
+  web:
+    <<: *default-app
+    ports:
+      - 8000:8000
+    command: python manage.py runserver_plus 0.0.0.0:8000
+    volumes:
+      - pypackages:/usr/src/app/__pypackages__
+      - ./:/usr/src/app/
+      - ./pyproject.toml:/usr/src/app/pyproject.toml:ro
+      - ./pdm.lock:/usr/src/app/pdm.lock:ro
+      - uploads:/usr/src/app/backend/media
+    depends_on:
+      - db
+      - redis
+      - media
+
+volumes:
+  db:
+  frontend_node_modules:
+  pypackages:
+  root_node_modules:
+  uploads:
